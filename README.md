@@ -4,7 +4,7 @@
 Assign summit attendees to the various venues based on preference.
 
 ```shell
-python cli path/to/csv -v "venue A":5 venueB:3
+python cli.py accommodation/example/attendees.csv -v venue1:22 venue2:13 venue3:4 venue4:14 "Venue 5":7
 ```
 
 Venues are supplied on the command line: `"venue name":<capacity>`
@@ -20,3 +20,7 @@ molly,
 ```
 
 `molly` has no preferences listed so may get assigned to any venue.
+
+### Venue priority
+The order of the venues provided is significant. In certain cases the tool will prioritize
+venues earlier in the list over ones later in the list.
