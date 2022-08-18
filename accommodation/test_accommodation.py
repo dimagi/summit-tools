@@ -3,8 +3,9 @@ from unittest.mock import patch
 
 import pytest
 
-from accommodation import (Attendee, Venue, assign_rooms, get_preference_graph,
-                           parse_attendees)
+from .models import Attendee, Venue
+from .assignment import assign_rooms, get_preference_graph
+from .parse import parse_attendees
 
 
 def setup_module():
@@ -74,7 +75,7 @@ def test_check_capacity_at_end():
         for i in range(capacity + 1)
     ]
 
-    with patch("accommodation.check_capacity", return_value=None), \
+    with patch("accommodation.assignment.check_capacity", return_value=None), \
          pytest.raises(Exception, match="No capacity remaining"):
             assign_rooms(venues, attendees)
 
