@@ -7,6 +7,8 @@ Assign summit attendees to the various venues based on preference.
 python cli path/to/csv -v "venue A":5 venueB:3
 ```
 
+Venues are supplied on the command line: `"venue name":<capacity>`
+
 The CSV file should contain the list of attendees and their accommodation preferences:
 
 ```csv
