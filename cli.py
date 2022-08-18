@@ -28,7 +28,8 @@ def check_venues(venues, attendees):
     venue_names = {venue.name for venue in venues}
     missing = preferences - venue_names
     if missing:
-        raise SummitException(f"CSV file contains unknown venues: {', '.join(missing)}")
+        missing = "', '".join(missing)
+        raise SummitException(f"CSV file contains unknown venues: '{missing}'")
 
 
 if __name__ == '__main__':
