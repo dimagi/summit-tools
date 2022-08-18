@@ -76,9 +76,14 @@ def parse_attendees(csv_data):
 
         name = row[0]
         prefs = set()
-        for yn, venue_name in zip(row[1:], venues):
-            if yn.lower().startswith('yes'):
-                prefs.add(venue_name)
+        attendee_pref_row = row[1:]
+        if not any(attendee_pref_row):
+            # user has not preferences declared
+            prefs = set(venues)
+        else:
+            for yn, venue_name in zip(attendee_pref_row, venues):
+                if yn.lower().startswith('yes'):
+                    prefs.add(venue_name)
 
         attendees.append(Attendee(name, prefs))
 
@@ -109,15 +114,21 @@ def assign_rooms(venues, attendees):
     check_capacity(venues, attendees)
     graph = get_preference_graph(venues, attendees)
     matches = maximum_bipartite_matching(graph, perm_type='column')
-    venue_rooms = list(itertools.chain.from_iterable([venue.venue_row() for venue in venues]))
+
+    # one element per room per venue
+    venue_row = list(itertools.chain.from_iterable([
+        venue.venue_row() for venue in venues
+    ]))
 
     unassigned = []
     for i, room_index in enumerate(matches):
         attendee = attendees[i]
+
         if room_index < 0:
             unassigned.append(attendee)
             continue
-        venue = venue_rooms[room_index]
+
+        venue = venue_row[room_index]
         venue.assign(attendee)
 
     if unassigned:
