@@ -5,7 +5,7 @@ import pytest
 
 from .models import Attendee, Venue
 from .assignment import assign_rooms, get_preference_graph
-from .parse import parse_attendees
+from .parse import parse_attendees, parse_venues
 
 
 def setup_module():
@@ -141,3 +141,9 @@ def test_parse_attendees():
         ("3", {"a", "c"}),
         ("4", {"a", "b", "c"}),
     ]
+
+
+def test_get_venues():
+    venues = parse_venues(["v1:3", "v2:5", "venue 3:1"])
+    assert [v.name for v in venues] == ['v1', 'v2', 'venue 3']
+    assert [v.capacity for v in venues] == [3, 5, 1]

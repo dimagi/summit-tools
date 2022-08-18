@@ -1,6 +1,6 @@
 import csv
 
-from accommodation.models import Attendee
+from accommodation.models import Attendee, Venue
 
 
 def parse_attendees(csv_data):
@@ -31,3 +31,16 @@ def parse_attendees(csv_data):
         attendees.append(Attendee(name, prefs))
 
     return attendees
+
+
+def parse_venues(raw_venues):
+    def _get_venue(raw):
+        name, capacity = raw.split(':')
+        try:
+            capacity = int(capacity)
+        except ValueError:
+            raise Exception(f"capacity must be an int: {raw}")
+
+        return Venue(name, capacity)
+
+    return [_get_venue(raw) for raw in raw_venues]
