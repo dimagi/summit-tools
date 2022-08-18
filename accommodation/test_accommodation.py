@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
+from accommodation import SummitException
 from .models import Attendee, Venue
 from .assignment import assign_rooms, get_preference_graph
 from .parse import parse_attendees, parse_venues
@@ -63,7 +64,7 @@ def test_check_capacity():
         for i in range(capacity + 1)
     ]
 
-    with pytest.raises(Exception, match="Not enough capacity"):
+    with pytest.raises(SummitException, match="Not enough capacity"):
         assign_rooms(venues, attendees)
 
 
@@ -76,7 +77,7 @@ def test_check_capacity_at_end():
     ]
 
     with patch("accommodation.assignment.check_capacity", return_value=None), \
-         pytest.raises(Exception, match="No capacity remaining"):
+         pytest.raises(SummitException, match="No capacity remaining"):
             assign_rooms(venues, attendees)
 
 

@@ -1,5 +1,6 @@
 import csv
 
+from accommodation import SummitException
 from accommodation.models import Attendee, Venue
 
 
@@ -39,7 +40,7 @@ def parse_venues(raw_venues):
         try:
             capacity = int(capacity)
         except ValueError:
-            raise Exception(f"capacity must be an int: {raw}")
+            raise SummitException(f"capacity must be an int: {raw}")
 
         return Venue(name, capacity)
 

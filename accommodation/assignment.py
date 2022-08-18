@@ -4,6 +4,8 @@ import logging
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import maximum_bipartite_matching
 
+from accommodation import SummitException
+
 log = logging.getLogger("summit")
 
 
@@ -48,13 +50,13 @@ def assign_rooms(venues, attendees):
                     break
             else:
                 # should never happen so fail loud
-                raise Exception("No capacity remaining")
+                raise SummitException("No capacity remaining")
 
 
 def check_capacity(venues, attendees):
     total_capacity = sum(venue.capacity for venue in venues)
     if total_capacity < len(attendees):
-        raise Exception("Not enough capacity")
+        raise SummitException("Not enough capacity")
 
 
 def get_preference_graph(venues, attendees):

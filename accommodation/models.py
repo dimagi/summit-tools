@@ -1,5 +1,7 @@
 import dataclasses
 
+from accommodation import SummitException
+
 
 @dataclasses.dataclass
 class Venue:
@@ -8,17 +10,24 @@ class Venue:
     assigned: list = dataclasses.field(default_factory=list)
 
     def has_capacity(self):
-        return self.capacity > len(self.assigned)
+        return self.capacity > self.used_capacity
+
+    @property
+    def used_capacity(self):
+        return len(self.assigned)
 
     def venue_row(self):
         return [self] * self.capacity
 
     def assign(self, attendee: "Attendee"):
         if not self.has_capacity():
-            raise Exception(f"No more capacity at '{self.name}'")
+            raise SummitException(f"No more capacity at '{self.name}'")
 
         self.assigned.append(attendee)
         attendee.venue = self
+
+    def __str__(self):
+        return f"{self.name}: Capacity (used,total): {self.used_capacity} / {self.capacity}"
 
 
 @dataclasses.dataclass
