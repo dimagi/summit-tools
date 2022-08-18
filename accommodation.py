@@ -1,9 +1,13 @@
 import csv
 import dataclasses
 import itertools
+import logging
 
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph._matching import maximum_bipartite_matching
+
+
+log = logging.getLogger("summit")
 
 
 @dataclasses.dataclass
@@ -15,14 +19,13 @@ class Venue:
     def has_capacity(self):
         return self.capacity > len(self.assigned)
 
-    @property
-    def room_list(self):
-        return [f"{self.name}:{i + 1}" for i in range(self.capacity)]
-
     def venue_row(self):
         return [self] * self.capacity
 
     def assign(self, attendee: "Attendee"):
+        if not self.has_capacity():
+            raise Exception(f"No more capacity at '{self.name}'")
+
         self.assigned.append(attendee)
         attendee.venue = self
 
@@ -41,10 +44,10 @@ class Attendee:
         For example:
 
             >>> venues = [Venue('a', capacity=2), Venue('b', capacity=3)]
-            >>> venues[0].room_list
-            ['a:1', 'a:2']
-
             >>> attendee = Attendee('joe', preferences={'a'})
+
+        Venue 'a' has 2 rooms and 'b' has 3 rooms so expect 5 elements in the result
+
             >>> attendee.get_matrix_row(venues)
             [1, 1, 0, 0, 0]
 
@@ -57,7 +60,13 @@ class Attendee:
         return row
 
 
-def parse_attendees(csv_data, ):
+def parse_attendees(csv_data):
+    """Parse data in following format:
+
+        attendee name, venue A name, venue B name
+        jack, yes, yes
+        gill, yes, no
+    """
     attendees = []
     venues = []
     for i, row in enumerate(csv.reader(csv_data)):
@@ -90,13 +99,38 @@ def get_preference_graph(venues, attendees):
 
 
 def assign_rooms(venues, attendees):
+    """Perform the venue assignment based on attendees preferences.
+
+    If an attendees preferences can not be met they will be assigned to the first
+    venue in the list that has capacity.
+
+    This will update both the venue and attendee objects with the assignments.
+    """
     check_capacity(venues, attendees)
     graph = get_preference_graph(venues, attendees)
     matches = maximum_bipartite_matching(graph, perm_type='column')
     venue_rooms = list(itertools.chain.from_iterable([venue.venue_row() for venue in venues]))
+
+    unassigned = []
     for i, room_index in enumerate(matches):
         attendee = attendees[i]
         if room_index < 0:
-            raise Exception(f"Unable to assign {attendee.name}")
+            unassigned.append(attendee)
+            continue
         venue = venue_rooms[room_index]
         venue.assign(attendee)
+
+    if unassigned:
+        log.warning("%s attendees could not be assigned their preference\n\t%s", len(unassigned), [
+            attendee.name for attendee in unassigned
+        ])
+
+        # fall back to assigning to first venue that has capacity
+        for attendee in unassigned:
+            for venue in venues:
+                if venue.has_capacity():
+                    venue.assign(attendee)
+                    break
+            else:
+                # should never happen so fail loud
+                raise Exception("No capacity remaining")

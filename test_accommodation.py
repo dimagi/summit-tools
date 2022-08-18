@@ -1,4 +1,7 @@
 import random
+from unittest.mock import patch
+
+import pytest
 
 from accommodation import (Attendee, Venue, assign_rooms, get_preference_graph,
                            parse_attendees)
@@ -51,6 +54,31 @@ def test_basic():
         assert attendee.venue.name in attendee.preferences
 
 
+def test_check_capacity():
+    venues = get_venues()
+    capacity = sum(v.capacity for v in venues)
+    attendees = [
+        Attendee(str(i), {'a'})
+        for i in range(capacity + 1)
+    ]
+
+    with pytest.raises(Exception, match="Not enough capacity"):
+        assign_rooms(venues, attendees)
+
+
+def test_check_capacity_at_end():
+    venues = get_venues()
+    capacity = sum(v.capacity for v in venues)
+    attendees = [
+        Attendee(str(i), {'a'})
+        for i in range(capacity + 1)
+    ]
+
+    with patch("accommodation.check_capacity", return_value=None), \
+         pytest.raises(Exception, match="No capacity remaining"):
+            assign_rooms(venues, attendees)
+
+
 def test_not_first_choice():
     attendees = [
         Attendee('1', {"a"}),
@@ -100,9 +128,9 @@ def test_assigned_to_capacity():
 def test_parse_attendees():
     csv_data = [l.strip() for l in """
     name,a,b,c
-    1,yes,yes,yes
-    2,yes,yes,no
-    3,yes,no,yes
+    1,yes,yes,Yes
+    2,yes,yes please,No
+    3,yes,no thanks,yes
     4,""".splitlines() if l.strip()]
 
     attendees = parse_attendees(csv_data)
