@@ -1,6 +1,7 @@
 import random
-from accommodation import Venue, Attendee, assign_venues, sort_attendees, parse_attendees, get_preference_graph, \
-    assign_rooms
+
+from accommodation import (Attendee, Venue, assign_rooms, get_preference_graph,
+                           parse_attendees)
 
 
 def setup_module():
@@ -33,20 +34,6 @@ def test_get_matrix():
         [0, 0, 0, 1, 1, 1],
     ]
 
-
-
-def test_sort_order():
-    attendees = [
-        Attendee('1'),
-        Attendee('2', {"a"}),
-        Attendee('3', {"a", "b"}),
-        Attendee('4', {"a", "b", "c"}),
-        Attendee('5', {"b", "c"}),
-        Attendee('6', {"c"}),
-    ]
-
-    names = [a.name for a in sort_attendees(attendees, 4)]
-    assert names == ['6', '2', '3', '5', '4', '1']
 
 
 def test_basic():
