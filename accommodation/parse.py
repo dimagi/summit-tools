@@ -14,6 +14,7 @@ def parse_attendees(csv_data):
     attendees = []
     venues = []
     for i, row in enumerate(csv.reader(csv_data)):
+        row = [v.strip() for v in row]
         if i == 0:
             venues = row[1:]
             continue

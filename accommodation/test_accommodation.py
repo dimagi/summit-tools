@@ -128,12 +128,12 @@ def test_assigned_to_capacity():
 
 
 @pytest.mark.parametrize("line,expected", [
-    ("1,yes,yes,Yes", Attendee("1", {"a", "b", "c"})),
+    ("1,  yes,yes,Yes", Attendee("1", {"a", "b", "c"})),
     ("2,yes,yes please,No", Attendee("2", {"a", "b"})),
     ("4", Attendee("4", {"a", "b", "c"})),
 ])
 def test_parse_attendees(line, expected):
-    csv_data = f"name,a,b,c\n{line}\n".splitlines()
+    csv_data = f"name,a,  b  ,c\n{line}\n".splitlines()
     attendee = parse_attendees(csv_data)[0]
     assert (attendee.name, attendee.preferences) == (expected.name, expected.preferences)
 
