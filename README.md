@@ -22,8 +22,8 @@ molly,
 `molly` has no preferences listed so may get assigned to any venue.
 
 ### Venue priority
-The order of the venues provided is significant. In certain cases the tool will prioritize
-venues earlier in the list over ones later in the list.
+The order of the venues provided is significant. Venues appearing earlier in the list will be
+allocated first.
 
 
 ### Technical notes
