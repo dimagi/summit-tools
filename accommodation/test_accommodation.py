@@ -128,9 +128,10 @@ def test_assigned_to_capacity():
 
 
 @pytest.mark.parametrize("line,expected", [
-    ("1,  yes,yes,Yes", Attendee("1", {"a", "b", "c"})),
-    ("2,yes,yes please,No", Attendee("2", {"a", "b"})),
-    ("4", Attendee("4", {"a", "b", "c"})),
+    pytest.param("1,  yes,yes  ,  Yes", Attendee("1", {"a", "b", "c"}), id='trim whitespace'),
+    pytest.param("2,yes,yes please,No", Attendee("2", {"a", "b"}), id='extra text'),
+    pytest.param("2,YES,Yes,No", Attendee("2", {"a", "b"}), id='case sensitive'),
+    pytest.param("4", Attendee("4", {"a", "b", "c"}), id='no preferences'),
 ])
 def test_parse_attendees(line, expected):
     csv_data = f"name,a,  b  ,c\n{line}\n".splitlines()
