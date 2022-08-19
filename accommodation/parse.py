@@ -26,13 +26,25 @@ def parse_attendees(csv_data):
             # user has not preferences declared
             prefs = set(venues)
         else:
+            if len(attendee_pref_row) != len(venues):
+                raise SummitException("Row count mismatch")
+
             for yn, venue_name in zip(attendee_pref_row, venues):
-                if yn.lower().startswith('yes'):
+                if _check_yes_no(yn):
                     prefs.add(venue_name)
 
         attendees.append(Attendee(name, prefs))
 
     return attendees
+
+
+def _check_yes_no(value):
+    value = value.lower()
+    if value.startswith('yes'):
+        return True
+    if value.startswith('no'):
+        return False
+    raise SummitException(f"Unrecognised preference value '{value}'. Value must start with 'yes' or 'no'")
 
 
 def parse_venues(raw_venues):

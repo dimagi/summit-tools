@@ -138,6 +138,16 @@ def test_parse_attendees(line, expected):
     assert (attendee.name, attendee.preferences) == (expected.name, expected.preferences)
 
 
+@pytest.mark.parametrize("line,message", [
+    pytest.param("1,yes,hello", "Unrecognised.*", id='not yes or no'),
+    pytest.param("2,yes,yes,no", "Row count mismatch", id='mismatched count'),
+])
+def test_parse_attendees_errors(line, message):
+    csv_data = f"name,a,b\n{line}\n".splitlines()
+    with pytest.raises(SummitException, match=message):
+        parse_attendees(csv_data)
+
+
 def test_get_venues():
     venues = parse_venues(["v1:3", "v2:5", "venue 3:1"])
     assert [v.name for v in venues] == ['v1', 'v2', 'venue 3']
