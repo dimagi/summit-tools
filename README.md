@@ -24,3 +24,14 @@ molly,
 ### Venue priority
 The order of the venues provided is significant. In certain cases the tool will prioritize
 venues earlier in the list over ones later in the list.
+
+
+### Technical notes
+This tool models the venue assignment as a [bipartite graph][1] and uses a [maximum matching algorithm][2] to
+perform the assignments.
+
+In the instance that an attendee fails to be matched to one of their preferences the tool falls back to
+assigning the attendee to the first venue that has capacity.
+
+[1]: https://en.wikipedia.org/wiki/Bipartite_graph
+[2]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csgraph.maximum_bipartite_matching.html
