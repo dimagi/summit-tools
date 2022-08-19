@@ -9,7 +9,14 @@ from accommodation.parse import parse_attendees, parse_venues
 def main(venues, attendees):
     assign_rooms(venues, attendees)
 
-    print("\n== Venue Summary ==")
+    print("\n== Summary ==")
+    got_pref_count = len([a for a in attendees if a.got_preference])
+    not_pref = len(attendees) - got_pref_count
+    print(f"{got_pref_count if not_pref else 'ALL'} attendees got one of their preferences")
+    if not_pref:
+        print(f"{not_pref} attendees did not get one of their preferences")
+
+    print()
     print("\n".join(str(v) for v in venues))
 
     print("\n== Venue Assignments ==")
