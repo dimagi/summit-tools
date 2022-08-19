@@ -24,7 +24,7 @@ class Venue:
             raise SummitException(f"No more capacity at '{self.name}'")
 
         self.assigned.append(attendee)
-        attendee.venue = self
+        attendee.assign(self)
 
     def __str__(self):
         return f"{self.name}: Capacity (used,total): {self.used_capacity} / {self.capacity}"
@@ -35,6 +35,7 @@ class Attendee:
     name: str
     preferences: set = dataclasses.field(default_factory=set)
     venue: "Venue" = None
+    got_preference: bool = None
 
     def get_matrix_row(self, venues):
         """Return a list of 1's and 0's indicating which venues the attendee has preference for.
@@ -58,3 +59,7 @@ class Attendee:
             yes_no = 1 if in_preferences else 0
             row.extend([yes_no] * venue.capacity)
         return row
+
+    def assign(self, venue):
+        self.venue = venue
+        self.got_preference = venue.name in self.preferences

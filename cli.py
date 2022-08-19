@@ -19,8 +19,10 @@ def main(venues, attendees):
         print(f"{venue.name}, {venue.capacity}, {venue.used_capacity}, {venue_attendees}")
 
     print("\n== Attendee Assignments ==")
+    print(f"attendee, assigned venue, got preference")
     for attendee in sorted(attendees, key=attrgetter('name')):
-        print(f"{attendee.name},{attendee.venue.name}")
+        got_preference = 'yes' if attendee.got_preference else 'no'
+        print(f"{attendee.name},{attendee.venue.name},{got_preference}")
 
 
 def check_venues(venues, attendees):

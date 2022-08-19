@@ -53,7 +53,7 @@ def test_basic():
     assign_rooms(get_venues(), attendees)
     for attendee in attendees:
         assert attendee.venue
-        assert attendee.venue.name in attendee.preferences
+        assert attendee.got_preference
 
 
 def test_check_capacity():
@@ -94,13 +94,22 @@ def test_not_first_choice():
     assign_rooms(venues, attendees)
     for attendee in attendees:
         assert attendee.venue
-        assert [(a.name, a.venue.name) for a in attendees] == [
-            ('1', 'a'),
-            ('2', 'a'),
-            ('3', 'b'),
-            ('4', 'c'),
-            ('5', 'c'),
-        ]
+
+    assert {a.name: a.got_preference for a in attendees} == {
+        '1': True,
+        '2': True,
+        '3': False,
+        '4': True,
+        '5': True,
+    }
+
+    assert [(a.name, a.venue.name) for a in attendees] == [
+        ('1', 'a'),
+        ('2', 'a'),
+        ('3', 'b'),
+        ('4', 'c'),
+        ('5', 'c'),
+    ]
 
 
 def test_assigned_to_capacity():
