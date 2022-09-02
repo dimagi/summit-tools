@@ -1,4 +1,5 @@
 import argparse
+import random
 from operator import attrgetter
 
 from accommodation import SummitException
@@ -45,11 +46,22 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('attendees', help='CSV file of attendees')
     parser.add_argument('-v', '--venues', nargs='+', help='List of venues with capacity e.g. venue1:5 venue2:6')
+    parser.add_argument('--seed', type=int, help='Random seed')
 
     args = parser.parse_args()
 
+    if args.seed:
+        seed = args.seed
+    else:
+        seed = random.randrange(1, 2**16)
+
+    print(f"\n==> Random seed: {seed}")
+    random.seed(args.seed)
+
     with open(args.attendees, 'r') as f:
         attendees = parse_attendees(f)
+
+    random.shuffle(attendees)
 
     venues = parse_venues(args.venues)
 

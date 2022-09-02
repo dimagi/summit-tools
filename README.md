@@ -25,6 +25,15 @@ molly,
 The order of the venues provided is significant. Venues appearing earlier in the list will be
 allocated first.
 
+### Randomizing results
+Each run of the command will randomize the attendee order before performing the assignment. The command
+output will include the random seed that was used:
+
+```
+==> Random Seed: 1043
+```
+
+To generate reproducible results pass the seed number to the command with `--seed <random integer>`
 
 ### Technical notes
 This tool models the venue assignment as a [bipartite graph][1] and uses a [maximum matching algorithm][2] to
