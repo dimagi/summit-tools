@@ -49,7 +49,7 @@ def _check_yes_no(value):
 
 def parse_venues(raw_venues):
     def _get_venue(raw):
-        name, capacity = raw.split(':')
+        name, capacity = raw.rsplit(':', 1)
         try:
             capacity = int(capacity)
         except ValueError:

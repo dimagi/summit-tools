@@ -159,6 +159,6 @@ def test_parse_attendees_errors(line, message):
 
 
 def test_get_venues():
-    venues = parse_venues(["v1:3", "v2:5", "venue 3:1"])
-    assert [v.name for v in venues] == ['v1', 'v2', 'venue 3']
-    assert [v.capacity for v in venues] == [3, 5, 1]
+    venues = parse_venues(["v1:3", "v2:5", "venue 3:1", "venue: great:8"])
+    assert [v.name for v in venues] == ['v1', 'v2', 'venue 3', 'venue: great']
+    assert [v.capacity for v in venues] == [3, 5, 1, 8]
