@@ -44,3 +44,23 @@ assigning the attendee to the first venue that has capacity.
 
 [1]: https://en.wikipedia.org/wiki/Bipartite_graph
 [2]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csgraph.maximum_bipartite_matching.html
+
+## GDT Summit 2022
+
+1. Get data from Google Form
+2. Delete the following columns:
+   - 'Timestamp'
+   - 'I have read and understand the disclaimers.'
+   - 'Would you like to record your preferences?'
+3. Add in any attendees who have not completed the survey (leave the preferences blank)
+4. Save as CSV
+5. Run the tool
+
+```
+python cli.py path/to/summit_accom.csv \
+    -v "Main site: Bush camp":22 \
+    "Main site: Guinea Fowl Lodge":13 \
+    "Main site: Guinea Fowl Lodge - Log Cabin":4 \
+    "Raptor Rise (various rooms)":14 \
+    "Reflections Guest Farm (various rooms)":7
+```
