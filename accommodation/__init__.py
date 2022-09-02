@@ -1,0 +1,2 @@
+class SummitException(Exception):
+    pass
