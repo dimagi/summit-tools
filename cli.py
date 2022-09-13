@@ -1,10 +1,13 @@
 import argparse
+import csv
 import random
+import sys
 from operator import attrgetter
 
 from accommodation import SummitException
 from accommodation.assignment import assign_rooms
 from accommodation.parse import parse_attendees, parse_venues
+from accommodation.utils import fill, transpose
 
 
 def main(venues, attendees):
@@ -21,10 +24,12 @@ def main(venues, attendees):
     print("\n".join(str(v) for v in venues))
 
     print("\n== Venue Assignments ==")
-    print(f"venue name, capacity, capacity used, assigned attendees")
-    for venue in venues:
-        venue_attendees = ", ".join(sorted([a.name for a in venue.assigned]))
-        print(f"{venue.name}, {venue.capacity}, {venue.used_capacity}, {venue_attendees}")
+    max_used = max(venue.used_capacity for venue in venues)
+    writer = csv.writer(sys.stdout)
+    writer.writerow([v.name for v in venues])
+    attendee_rows_by_venue = transpose([fill(v.assigned, max_used) for v in venues])
+    for row in attendee_rows_by_venue:
+        writer.writerow([cell.name if cell else '' for cell in row])
 
     print("\n== Attendee Assignments ==")
     print(f"attendee, assigned venue, got preference")
