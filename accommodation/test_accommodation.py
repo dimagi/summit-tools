@@ -142,6 +142,7 @@ def test_assigned_to_capacity():
     pytest.param("2,YES,Yes,No", Attendee("2", {"a", "b"}), id='case sensitive'),
     pytest.param("4", Attendee("4", {"a", "b", "c"}), id='no preferences'),
     pytest.param("", None, id='blank'),
+    pytest.param(",,,,", None, id='blank-cells'),
 ])
 def test_parse_attendees(line, expected):
     csv_data = f"name,a,  b  ,c\n{line}\n".splitlines()
